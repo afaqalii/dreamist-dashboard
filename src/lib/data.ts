@@ -1,5 +1,5 @@
 import { AlignVerticalJustifyEnd, Store, ChartColumnIncreasing, NotebookTabs, LayoutDashboard } from 'lucide-react';
-
+// menu items for sidebar
 export const MenuItems = [
     {
         text: "Dashboard",

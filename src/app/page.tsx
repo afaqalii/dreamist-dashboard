@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="h-screen grid place-content-center">
       <div>
-        <h1 className="text-2xl mb-4">Go to dashboard</h1>
+        <h1 className="text-2xl mb-4 text-[#F5F5F5]">Go to dashboard</h1>
         <Link className="grid place-content-center" href="/dashboard">
           <Button>Dashboard</Button>
         </Link>
