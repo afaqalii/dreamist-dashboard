@@ -5,7 +5,6 @@ import User from '@/models/User';
 
 export async function POST(req: NextRequest) {
   await connectDB();
-
   try {
     const { name, email, password } = await req.json();
 
