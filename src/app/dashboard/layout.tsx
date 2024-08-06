@@ -8,7 +8,7 @@ import Navbar from "@/components/ui/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Byte Basha Dashboard",
+  title: "Dreamist Clothing Brand",
   description: "Manage all your website content from one place",
 };
 

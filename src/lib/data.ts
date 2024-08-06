@@ -27,3 +27,33 @@ export const MenuItems = [
         icon: ChartColumnIncreasing,
     },
 ]
+
+
+// product size and quantity array 
+export const sizeAndQuantityArray = [
+    {
+        string:"small",
+        value: "s",
+        quantity: 1,
+    },
+    {
+        string:"medium",
+        value: "m",
+        quantity: 1,
+    },
+    {
+        string:"large",
+        value: "l",
+        quantity: 1,
+    },
+    {
+        string:"extra large",
+        value: "xl",
+        quantity: 1,
+    },
+    {
+        string:"extra extra large",
+        value: "xxl",
+        quantity: 1,
+    },
+]
