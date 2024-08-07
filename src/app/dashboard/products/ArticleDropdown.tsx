@@ -1,5 +1,5 @@
 import { ArticleDropdownProps } from '@/lib/interfaces/productSlice';
-import { openArticleDialog, removeArticle } from '@/redux/ProductSlice';
+import { editArticle, openArticleDialog, removeArticle, setArticleEditMode } from '@/redux/ProductSlice';
 import { AppDispatch } from '@/redux/store';
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
@@ -12,6 +12,8 @@ const ArticleDropdown = ({ article }: ArticleDropdownProps) => {
         dispatch(removeArticle(article.id))
     }
     const handleEdit = () => {
+        dispatch(setArticleEditMode(true));
+        dispatch(editArticle(article))
         dispatch(openArticleDialog());
     }
     return (

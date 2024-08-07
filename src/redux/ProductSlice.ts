@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: ProductSliceState = {
     isDialogOpen: false,
+    articleEditMode: false,
     currentArticle: {
         id: "",
         hexValue: "",
@@ -17,8 +18,8 @@ const initialState: ProductSliceState = {
         salePercentage: "",
         productDescription: "",
         activeColor: "",
-        productCategory: "T-Shirts",
-        productGender: "Male",
+        productCategory: "t-shirt",
+        productGender: "male",
         articles: [],
         colors: [],
         currentArticleInd: -1,
@@ -34,6 +35,7 @@ const productSlice = createSlice({
         },
         closeArticleDialog(state) {
             state.isDialogOpen = false;
+            state.articleEditMode = false; // edit modes only need to be true with click on edit otherwise if the modal closes make it false;
         },
         setProductName(state, action: PayloadAction<string>) {
             state.productForm.productName = action.payload;
@@ -67,9 +69,19 @@ const productSlice = createSlice({
             };
         },
         editArticle(state, action: PayloadAction<Article>) {
+            const article = state.productForm.articles.find(article => article.id === action.payload.id);
+            if (article) {
+                state.currentArticle = article;
+            } else {
+                console.error("Article not found");
+            }
+        },
+        updateArticle(state, action: PayloadAction<Article>) {
             const index = state.productForm.articles.findIndex(article => article.id === action.payload.id);
             if (index !== -1) {
                 state.productForm.articles[index] = action.payload;
+            } else {
+                console.error("Article not found");
             }
         },
         removeArticle(state, action: PayloadAction<string>) {
@@ -90,7 +102,7 @@ const productSlice = createSlice({
                 }
             }
         },
-        uploadImages(state, action: PayloadAction<string[]>) {
+        uploadImages(state, action: PayloadAction<File[]>) {
             state.currentArticle.images.push(...action.payload);
         },
         removeImage(state, action: PayloadAction<number>) {
@@ -102,7 +114,19 @@ const productSlice = createSlice({
         updateSelectedColor(state, action: PayloadAction<string>) {
             state.currentArticle.hexValue = action.payload;
         },
-        resetCurrentArticle(state) {
+        resetProductStateValues(state) {
+            state.productForm = {
+                productName: "",
+                productPrice: "",
+                salePercentage: "",
+                productDescription: "",
+                activeColor: "",
+                productCategory: "t-shirt",
+                productGender: "male",
+                articles: [],
+                colors: [],
+                currentArticleInd: -1,
+            }
             state.currentArticle = {
                 id: "",
                 hexValue: "",
@@ -117,6 +141,9 @@ const productSlice = createSlice({
         removeProductColor(state, action: PayloadAction<number>) {
             state.productForm.colors.splice(action.payload, 1);
         },
+        setArticleEditMode(state, action: PayloadAction<boolean>) {
+            state.articleEditMode = action.payload;
+        }
     },
 });
 
@@ -130,6 +157,7 @@ export const {
     setProductGender,
     addArticle,
     editArticle,
+    updateArticle,
     removeArticle,
     openArticleDialog,
     closeArticleDialog,
@@ -140,9 +168,10 @@ export const {
     removeImage,
     removeAllImages,
     updateSelectedColor,
-    resetCurrentArticle,
+    resetProductStateValues,
     addProductColor,
     removeProductColor,
+    setArticleEditMode,
 } = productSlice.actions;
 
 export default productSlice.reducer;

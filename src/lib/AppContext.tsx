@@ -1,6 +1,7 @@
 'use client'
 
 import store from '@/redux/store';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { UIState } from './interfaces';
@@ -20,7 +21,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const [uiState, setUIState] = useState<UIState>({
         isSidebarOpen: true, // Initial state that does not rely on window
     });
-
+    const queryClient = new QueryClient();
     useEffect(() => {
         const handleResize = () => {
             setUIState({
@@ -48,11 +49,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     };
 
     return (
-        <Provider store={store}>
-            <AppContext.Provider value={{ uiState, toggleSidebar }}>
-                {children}
-            </AppContext.Provider>
-        </Provider>
+        <QueryClientProvider client={queryClient}>
+            <Provider store={store}>
+                <AppContext.Provider value={{ uiState, toggleSidebar }}>
+                    {children}
+                </AppContext.Provider>
+            </Provider>
+        </QueryClientProvider>
     );
 };
 

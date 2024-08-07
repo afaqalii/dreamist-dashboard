@@ -31,7 +31,7 @@ const ColorPicker: React.FC = () => {
   };
 
   return (
-    <div className='bg-white text-black rounded px-4 py-5 mb-5 border-blue border'>
+    <div className='bg-white text-black rounded px-4 py-5 mb-5 border-blue border mt-1'>
       <ul className='flex flex-wrap w-full gap-4'>
         {colors.map((color, index) => (
           <li

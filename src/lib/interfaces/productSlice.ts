@@ -2,7 +2,8 @@ export interface Article {
     id: string;
     hexValue: string,
     color: string,
-    images: string[],
+    images: File[] | string[],
+    productSizeAndQuantity: sizeAndQantityState[];
 }
 export interface ArticleDropdownProps {
     article: Article;
@@ -20,7 +21,7 @@ export interface currentArticleForm {
     id: string;
     hexValue: string;
     color: string;
-    images: string[];
+    images: File[] | string[];
     productSizeAndQuantity: sizeAndQantityState[];
 }
 export interface productSliceForm {
@@ -37,6 +38,7 @@ export interface productSliceForm {
 }
 export interface ProductSliceState {
     isDialogOpen: boolean;
+    articleEditMode: boolean;
     currentArticle: currentArticleForm;
     productForm: productSliceForm,
 }

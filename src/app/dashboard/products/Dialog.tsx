@@ -12,32 +12,41 @@ import {
     uploadImages,
     removeImage,
     removeAllImages,
-    updateSelectedColor
+    updateSelectedColor,
+    updateArticle
 } from '@/redux/ProductSlice';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Trash2, Upload } from 'lucide-react';
 import { DialogTitle } from '@radix-ui/react-dialog';
+import { isCurrentArticleValid } from '@/lib/helper';
 
 const ArticleDialog = () => {
     const dispatch = useDispatch<AppDispatch>();
     const [showSize, setShowSize] = useState(true);
-    const { isDialogOpen, productForm, currentArticle } = useSelector((state: RootState) => state.product);
+    const { isDialogOpen, articleEditMode, productForm, currentArticle } = useSelector((state: RootState) => state.product);
     const imagesRef = useRef<HTMLInputElement>(null);
 
-    const handleAddArticle = () => {
-        const newArticle = {
-            ...currentArticle,
-            id: uuidv4()
-        };
-        dispatch(addArticle(newArticle));
-        dispatch(closeArticleDialog());
+    const handleArticle = () => {
+        if (currentArticle && isCurrentArticleValid(currentArticle)) {
+            if (articleEditMode)
+                dispatch(updateArticle(currentArticle))
+            else {
+                const newArticle = {
+                    ...currentArticle,
+                    id: uuidv4(),
+                };
+                dispatch(addArticle(newArticle));
+            }
+            dispatch(closeArticleDialog());
+        } else {
+            console.error('All fields must be filled.');
+        }
     };
-
     const handleSaveEdit = () => {
         dispatch(editArticle(currentArticle));
         dispatch(closeArticleDialog());
@@ -45,7 +54,7 @@ const ArticleDialog = () => {
 
     const handleSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
-            const filesArray = Array.from(event.target.files).map(file => URL.createObjectURL(file));
+            const filesArray = Array.from(event.target.files).map(file => (file));
             dispatch(uploadImages(filesArray));
         }
     };
@@ -78,7 +87,7 @@ const ArticleDialog = () => {
                 <DialogTitle>
                     <div>
                         <Label>Select Article Color</Label>
-                        <Select onValueChange={(value) => dispatch(updateSelectedColor(value))}>
+                        <Select value={currentArticle.hexValue} onValueChange={(value) => dispatch(updateSelectedColor(value))}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select color" />
                             </SelectTrigger>
@@ -131,7 +140,7 @@ const ArticleDialog = () => {
                                         <Trash2 color='white' size="15px" onClick={() => handleRemoveImgFile(index)} />
                                     </span>
                                     <img
-                                        src={selectedFile}
+                                        src={typeof selectedFile === "string" ? selectedFile : URL.createObjectURL(selectedFile)}
                                         alt="Selected picture"
                                         className="mt-2 object-cover w-full h-full"
                                     />
@@ -176,11 +185,7 @@ const ArticleDialog = () => {
                 </section>
                 <div>
                     <Button onClick={() => dispatch(closeArticleDialog())} variant="outline">Cancel</Button>
-                    {productForm.currentArticleInd >= 0 ? (
-                        <Button onClick={handleSaveEdit}>Save</Button>
-                    ) : (
-                        <Button onClick={handleAddArticle}>Add</Button>
-                    )}
+                    <Button onClick={handleArticle}>{articleEditMode ? "Update Article" : "Add Article"}</Button>
                 </div>
             </DialogContent>
         </Dialog>
