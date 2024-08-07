@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setProductName, setProductPrice, setSalePercentage, setProductDescription, setActiveColor, setProductCategory, setProductGender, addArticle, editArticle, removeArticle, openArticleDialog, resetProductStateValues } from '@/redux/ProductSlice';
 import { RootState } from '@/redux/store';
@@ -16,9 +16,12 @@ import Spinner from '@/components/ui/loader/loader';
 import { database, storage } from '@/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { push, set, ref as dbRef, update } from 'firebase/database';
+import { usePathname, useRouter } from 'next/navigation';
 
 const ProductPage: React.FC = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const location = usePathname()
   const { productForm, productFormEditMode } = useSelector((state: RootState) => state.product);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -77,6 +80,7 @@ const ProductPage: React.FC = () => {
         });
       }
       dispatch(resetProductStateValues())
+      router.push("/dashboard/listing")
       setIsUploading(false);
     } catch (error) {
       console.error("Error uploading product data:", error);

@@ -19,19 +19,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-            <body className={inter.className}>
-              <ProtectedRoute>
-                <section className="flex w-full h-screen">
-                  <Sidebar />
-                  <main className="flex flex-col w-full overflow-auto">
-                    <Navbar />
-                    <div className="container p-5">
-                      {children}
-                    </div>
-                  </main>
-                </section>
-              </ProtectedRoute>
-            </body>
+      <body className={inter.className}>
+        <ProtectedRoute>
+          <section className="flex w-full h-screen">
+            <Sidebar />
+            <main className="flex flex-col w-full overflow-auto">
+              <Navbar />
+              <div className="container p-5">
+                {children}
+              </div>
+            </main>
+          </section>
+        </ProtectedRoute>
+      </body>
     </html>
   );
 }

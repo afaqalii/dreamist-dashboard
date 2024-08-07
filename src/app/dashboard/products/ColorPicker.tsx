@@ -21,6 +21,7 @@ const ColorPicker: React.FC = () => {
   const handleAddColor = () => {
     if (newColor && newColorString) {
       dispatch(addProductColor({ value: newColor, string: newColorString }));
+      
       setNewColor('');
       setNewColorString('');
     }

@@ -127,7 +127,6 @@ const ArticleDialog = () => {
                         onChange={(e) => handleSelectFile(e)}
                         type="file"
                         name="uploadImages"
-                        multiple
                         className="hidden"
                         accept="image/*"
                         id="uploadImages"
