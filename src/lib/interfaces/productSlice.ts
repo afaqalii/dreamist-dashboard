@@ -25,6 +25,7 @@ export interface currentArticleForm {
     productSizeAndQuantity: sizeAndQantityState[];
 }
 export interface productSliceForm {
+    id?:string;
     productName: string;
     productPrice: string;
     salePercentage: string;
@@ -39,6 +40,7 @@ export interface productSliceForm {
 export interface ProductSliceState {
     isDialogOpen: boolean;
     articleEditMode: boolean;
+    productFormEditMode: boolean;
     currentArticle: currentArticleForm;
     productForm: productSliceForm,
 }

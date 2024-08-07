@@ -1,10 +1,11 @@
 import { sizeAndQuantityArray } from '@/lib/data';
-import { Article, Color, ProductSliceState } from '@/lib/interfaces/productSlice';
+import { Article, Color, productSliceForm, ProductSliceState } from '@/lib/interfaces/productSlice';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: ProductSliceState = {
     isDialogOpen: false,
     articleEditMode: false,
+    productFormEditMode:false,
     currentArticle: {
         id: "",
         hexValue: "",
@@ -58,6 +59,10 @@ const productSlice = createSlice({
         setProductGender(state, action: PayloadAction<string>) {
             state.productForm.productGender = action.payload;
         },
+        editProductForm(state, action: PayloadAction<productSliceForm>) {
+            state.productForm = action.payload;
+            state.productFormEditMode = true;
+        },
         addArticle(state, action: PayloadAction<Article>) {
             state.productForm.articles.push(action.payload);
             state.currentArticle = {
@@ -69,9 +74,8 @@ const productSlice = createSlice({
             };
         },
         editArticle(state, action: PayloadAction<Article>) {
-            const article = state.productForm.articles.find(article => article.id === action.payload.id);
-            if (article) {
-                state.currentArticle = article;
+            if (action.payload) {
+                state.currentArticle = action.payload;
             } else {
                 console.error("Article not found");
             }
@@ -155,6 +159,7 @@ export const {
     setActiveColor,
     setProductCategory,
     setProductGender,
+    editProductForm,
     addArticle,
     editArticle,
     updateArticle,

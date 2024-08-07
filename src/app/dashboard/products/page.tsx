@@ -15,11 +15,11 @@ import ColorPicker from './ColorPicker';
 import Spinner from '@/components/ui/loader/loader';
 import { database, storage } from '@/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { push, set, ref as dbRef } from 'firebase/database';
+import { push, set, ref as dbRef, update } from 'firebase/database';
 
 const ProductPage: React.FC = () => {
   const dispatch = useDispatch();
-  const { productForm } = useSelector((state: RootState) => state.product);
+  const { productForm, productFormEditMode } = useSelector((state: RootState) => state.product);
   const [isUploading, setIsUploading] = useState(false);
 
   const handleUploadProduct = async (e: { preventDefault: () => void; }) => {
@@ -65,13 +65,17 @@ const ProductPage: React.FC = () => {
         string: article.color,
       }));
       // Push product data to Firebase Database
-      const newProductRef = push(dbRef(database, `products`));
-      await set(newProductRef, {
-        ...updatedProductForm,
-        productColors,
-        id: newProductRef.key,
-        createdAt: new Date().toISOString(),
-      });
+      if (productFormEditMode) {
+        await update(dbRef(database, `products/${productForm.id}`), productForm)
+      } else {
+        const newProductRef = push(dbRef(database, `products`));
+        await set(newProductRef, {
+          ...updatedProductForm,
+          productColors,
+          id: newProductRef.key,
+          createdAt: new Date().toISOString(),
+        });
+      }
       dispatch(resetProductStateValues())
       setIsUploading(false);
     } catch (error) {
