@@ -1,30 +1,37 @@
-'use client';
+import Title from "@/components/ui/Title"
+import { Payment, columns } from "./columns"
+import { DataTable } from "./data-table"
 
-import ProductCard from '@/components/ProductCard';
-import Spinner from '@/components/ui/loader/loader';
-import Title from '@/components/ui/Title';
-import { useFirebaseData } from '@/hooks/useFirebaseData'
-import React, { useEffect } from 'react'
+async function getData(): Promise<Payment[]> {
+  return [
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@example.com",
+    },
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@example.com",
+    },
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@example.com",
+    },
+    
+  ]
+}
+export default async function page() {
+  const data = await getData()
 
-const page = () => {
-  const { data, isLoading } = useFirebaseData("/products")
   return (
     <div>
-      <Title>
-        Products Listing
-      </Title>
-      {
-        isLoading ?
-          <Spinner />
-          :
-          <>
-            {data?.map((card) => (
-              <ProductCard item={card} />
-            ))}
-          </>
-      }
+      <Title>Product Listing</Title>
+      <DataTable columns={columns} data={data} />
     </div>
   )
 }
-
-export default page
