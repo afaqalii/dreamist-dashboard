@@ -2,11 +2,11 @@
 import Title from "@/components/ui/Title"
 import { columns } from "./columns"
 import { DataTable } from "./data-table"
-import { useProducts } from "./fetchProduct";
+import { useFetchProducts } from "./useFetchProducts";
 import Spinner from "@/components/ui/loader/loader";
 
 export default function page() {
-  const { data, isLoading } = useProducts()
+  const { data, isLoading } = useFetchProducts()
 
   return (
     <div>

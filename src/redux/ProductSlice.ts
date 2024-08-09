@@ -128,7 +128,6 @@ const productSlice = createSlice({
                 productGender: "male",
                 articles: [],
                 colors: [],
-                currentArticleInd: -1,
             }
             state.currentArticle = {
                 id: "",

@@ -14,8 +14,7 @@ const fetchProducts = async (): Promise<Product[]> => {
     return Object.values(snapshot.val()) as Product[];
 };
 
-
-export const useProducts = () => {
+export const useFetchProducts = () => {
     return useQuery<Product[]>({
         queryKey: ['products'],
         queryFn: fetchProducts,

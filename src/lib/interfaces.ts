@@ -15,7 +15,7 @@ export interface TitleProps {
   isRootLetter?: boolean;
 }
 export interface Product {
-  id?: string;
+  id: string;
   productName: string;
   productPrice: string;
   salePercentage: string;
