@@ -25,7 +25,7 @@ export interface currentArticleForm {
     productSizeAndQuantity: sizeAndQantityState[];
 }
 export interface productSliceForm {
-    id?:string;
+    id?:string; // because we don't have ID before adding the productForm to database thats why its optional or can be undefined
     productName: string;
     productPrice: string;
     salePercentage: string;
@@ -35,7 +35,6 @@ export interface productSliceForm {
     productGender: string;
     articles: Article[];
     colors: Color[],
-    currentArticleInd: number;
 }
 export interface ProductSliceState {
     isDialogOpen: boolean;

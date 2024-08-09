@@ -23,7 +23,6 @@ const initialState: ProductSliceState = {
         productGender: "male",
         articles: [],
         colors: [],
-        currentArticleInd: -1,
     }
 };
 

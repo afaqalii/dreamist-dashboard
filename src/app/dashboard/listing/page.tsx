@@ -1,37 +1,24 @@
+'use client';
 import Title from "@/components/ui/Title"
-import { Payment, columns } from "./columns"
+import { columns } from "./columns"
 import { DataTable } from "./data-table"
+import { useProducts } from "./fetchProduct";
+import Spinner from "@/components/ui/loader/loader";
 
-async function getData(): Promise<Payment[]> {
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    
-  ]
-}
-export default async function page() {
-  const data = await getData()
+export default function page() {
+  const { data, isLoading } = useProducts()
 
   return (
     <div>
       <Title>Product Listing</Title>
-      <DataTable columns={columns} data={data} />
+      {
+        isLoading ?
+          <div className="grid place-items-center min-h-[400px]">
+            <Spinner />
+          </div>
+          :
+          <DataTable columns={columns} data={data ?? []} />
+      }
     </div>
   )
 }

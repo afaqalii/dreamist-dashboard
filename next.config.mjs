@@ -8,8 +8,9 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
-                hostname:"https://firebasestorage.googleapis.com",
-            }
+                hostname: 'firebasestorage.googleapis.com',
+                pathname: '/v0/b/dreamist-dashboard.appspot.com/**', // Allow all paths under this Firebase storage bucket
+            },
         ],
     },
 };

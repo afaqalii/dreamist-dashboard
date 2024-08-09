@@ -1,42 +1,69 @@
-"use client"
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Product } from "@/lib/interfaces"
+import { editProductForm } from "@/redux/ProductSlice"
 import { ColumnDef } from "@tanstack/react-table"
 import { Edit2, MoreHorizontal, Trash2 } from "lucide-react"
-export type Payment = {
-    id: string
-    amount: number
-    status: "pending" | "processing" | "success" | "failed"
-    email: string
-}
+import Image from 'next/image'
+import { useRouter } from "next/navigation"
+import { useDispatch } from "react-redux"
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Product>[] = [
     {
-        accessorKey: "status",
-        header: "Status",
-    },
-    {
-        accessorKey: "email",
-        header: "Email",
-    },
-    {
-        accessorKey: "amount",
-        header: () => <div className="text-right">Amount</div>,
+        id: "productImage",
+        header: "Image",
         cell: ({ row }) => {
-            const amount = parseFloat(row.getValue("amount"))
+            const article = row.original.articles[0]
+            const imageUrl = article?.images?.[0]
+
+            return (
+                imageUrl ? <Image src={imageUrl} alt="Product Image" width={50} height={50} /> : "No Image"
+            )
+        },
+    },
+    {
+        accessorKey: "productName",
+        header: "Product Name",
+    },
+    {
+        accessorKey: "productCategory",
+        header: "Product Category",
+    },
+    {
+        accessorKey: "productGender",
+        header: "Gender",
+    },
+    {
+        accessorKey: "productPrice",
+        header: () => <div className="text-right">Actual Price</div>,
+        cell: ({ row }) => {
+            const price = parseFloat(row.getValue("productPrice"))
             const formatted = new Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
-            }).format(amount)
+            }).format(price)
 
             return <div className="text-right font-medium">{formatted}</div>
         },
     },
     {
+        accessorKey: "salePercentage",
+        header: () => <div className="text-right">Sale %</div>,
+        cell: ({ row }) => {
+            const salePercentage = row.getValue<number>("salePercentage")
+
+            return <div className="text-right font-medium">{salePercentage}%</div>
+        },
+    },
+    {
         id: "actions",
         cell: ({ row }) => {
-            const payment = row.original
-
+            const router = useRouter();
+            const dispatch = useDispatch();
+            const handleEdit = () => {
+                dispatch(editProductForm(row.original))
+                router.push("/dashboard/products")
+            }
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -45,7 +72,7 @@ export const columns: ColumnDef<Payment>[] = [
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem className="py-2">
+                        <DropdownMenuItem onClick={handleEdit} className="py-2">
                             <Edit2 className="mr-2 h-4 w-4" />
                             <span>Edit Product</span>
                         </DropdownMenuItem>

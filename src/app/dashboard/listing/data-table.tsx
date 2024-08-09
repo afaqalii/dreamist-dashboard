@@ -1,10 +1,8 @@
 "use client"
-
 import {
     ColumnDef,
     flexRender,
     getCoreRowModel,
-    ColumnFiltersState,
     getPaginationRowModel,
     getFilteredRowModel,
     useReactTable,
@@ -31,17 +29,18 @@ export function DataTable<TData, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    )
+    const [globalFilter, setGlobalFilter] = React.useState("") // For global filter state
+    const [columnFilters, setColumnFilters] = React.useState([])
+
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
+        onGlobalFilterChange: setGlobalFilter, // Set global filter
         state: {
+            globalFilter, // Apply global filter state
             columnFilters,
         },
     })
@@ -50,11 +49,9 @@ export function DataTable<TData, TValue>({
         <div>
             <div className="flex items-center py-4">
                 <Input
-                    placeholder="Search by category..."
-                    value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("email")?.setFilterValue(event.target.value)
-                    }
+                    placeholder="Search..."
+                    value={globalFilter}
+                    onChange={(event) => setGlobalFilter(event.target.value)} // Update global filter value
                     className="max-w-sm"
                 />
             </div>
@@ -63,18 +60,16 @@ export function DataTable<TData, TValue>({
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead key={header.id}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                        </TableHead>
-                                    )
-                                })}
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead key={header.id}>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
+                                    </TableHead>
+                                ))}
                             </TableRow>
                         ))}
                     </TableHeader>
