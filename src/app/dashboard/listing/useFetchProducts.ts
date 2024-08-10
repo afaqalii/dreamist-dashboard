@@ -18,6 +18,6 @@ export const useFetchProducts = () => {
     return useQuery<Product[]>({
         queryKey: ['products'],
         queryFn: fetchProducts,
-        staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+        // staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     });
 };

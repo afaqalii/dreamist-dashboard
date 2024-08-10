@@ -28,7 +28,7 @@ export interface productSliceForm {
     id?:string; // because we don't have ID before adding the productForm to database thats why its optional or can be undefined
     productName: string;
     productPrice: string;
-    salePercentage: string;
+    salePercentage?: string;
     productDescription: string;
     activeColor: string;
     productCategory: string;

@@ -18,20 +18,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <ProtectedRoute>
-          <section className="flex w-full h-screen">
-            <Sidebar />
-            <main className="flex flex-col w-full overflow-auto">
-              <Navbar />
-              <div className="container p-5">
-                {children}
-              </div>
-            </main>
-          </section>
-        </ProtectedRoute>
-      </body>
-    </html>
+    <ProtectedRoute>
+      <section className="flex w-full h-screen">
+        <Sidebar />
+        <main className="flex flex-col w-full overflow-auto">
+          <Navbar />
+          <div className="container p-5">
+            {children}
+          </div>
+        </main>
+      </section>
+    </ProtectedRoute>
   );
 }

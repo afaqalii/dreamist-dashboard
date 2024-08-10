@@ -17,6 +17,8 @@ import { database, storage } from '@/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { push, set, ref as dbRef, update } from 'firebase/database';
 import { usePathname, useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/use-toast';
+import { validateProductForm } from '@/lib/helper';
 
 const ProductPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -27,6 +29,10 @@ const ProductPage: React.FC = () => {
 
   const handleUploadProduct = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
+
+    if (!validateProductForm(productForm))
+       return;
+      
     setIsUploading(true);
     try {
       // Create a copy of the productForm to update it with new image URLs

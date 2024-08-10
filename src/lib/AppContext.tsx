@@ -1,10 +1,12 @@
-'use client'
+'use client';
 
 import store from '@/redux/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { UIState } from './interfaces';
+import { Toaster } from "@/components/ui/toaster";
 
 interface AppContextProps {
     uiState: UIState;
@@ -19,23 +21,26 @@ interface AppProviderProps {
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     const [uiState, setUIState] = useState<UIState>({
-        isSidebarOpen: true, // Initial state that does not rely on window
+        isSidebarOpen: true, // Default to true for consistent SSR output
     });
+
     const queryClient = new QueryClient();
+
     useEffect(() => {
+        // Run only on the client side
         const handleResize = () => {
             setUIState({
                 isSidebarOpen: window.innerWidth >= 768,
             });
         };
 
-        // Set initial state based on window width
+        // Set the initial state based on the current window width
         handleResize();
 
         // Add event listener for window resize
         window.addEventListener('resize', handleResize);
 
-        // Clean up event listener on component unmount
+        // Clean up the event listener on component unmount
         return () => {
             window.removeEventListener('resize', handleResize);
         };
@@ -48,6 +53,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         }));
     };
 
+    // Render without checking for window size during SSR
     return (
         <QueryClientProvider client={queryClient}>
             <Provider store={store}>
@@ -55,6 +61,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
                     {children}
                 </AppContext.Provider>
             </Provider>
+            <ReactQueryDevtools />
+            <Toaster />
         </QueryClientProvider>
     );
 };
