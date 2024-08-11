@@ -26,3 +26,27 @@ export interface Product {
   articles: Article[];
   colors: Color[],
 }
+
+interface items {
+  id: string,
+  color: string,
+  images: string[],
+  productName: string,
+  productPrice: string,
+  quantity: string,
+  size: string,
+}
+export interface order {
+  id: string;
+  items: items[];
+  orderDetails: {
+    phoneNumber: string,
+    address: string,
+    fullName: string;
+    city: string,
+    province: string;
+  }
+  orderDate: string,
+  status: "pending" | "delivered" | "canceled" | "returned"
+}
+

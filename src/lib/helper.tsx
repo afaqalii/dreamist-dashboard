@@ -42,3 +42,8 @@ export function validateProductForm(productForm: productSliceForm): boolean {
   } else
     return true;
 }
+
+
+export const formatPrice = (price: string) => {
+  return `PKR ${parseInt(price).toLocaleString()}`;
+};
