@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setProductName, setProductPrice, setSalePercentage, setProductDescription, setActiveColor, setProductCategory, setProductGender, addArticle, editArticle, removeArticle, openArticleDialog, resetProductStateValues } from '@/redux/ProductSlice';
 import { RootState } from '@/redux/store';
@@ -17,7 +17,6 @@ import { database, storage } from '@/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { push, set, ref as dbRef, update } from 'firebase/database';
 import { usePathname, useRouter } from 'next/navigation';
-import { useToast } from '@/components/ui/use-toast';
 import { validateProductForm } from '@/lib/helper';
 
 const ProductPage: React.FC = () => {
@@ -30,63 +29,126 @@ const ProductPage: React.FC = () => {
   const handleUploadProduct = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
-    if (!validateProductForm(productForm))
-      return;
+    if (!validateProductForm(productForm)) return;
 
     setIsUploading(true);
     try {
-      // Create a copy of the productForm to update it with new image URLs
-      let updatedProductForm = { ...productForm, articles: [...productForm.articles] };
-      for (const articleIndex in updatedProductForm.articles) {
-        const article = updatedProductForm.articles[articleIndex];
-        const articleDownloadUrls = [];
-        // Iterate over images in each article
-        for (const file of article.images) {
-          if (typeof file === "object") {
-            console.log("File name:", file.name); // Debugging log
-            console.log("Product category:", productForm.productCategory); // Debugging log
-            if (!file.name || !productForm.productCategory) {
-              console.error("File name or product category is undefined");
-              setIsUploading(false);
-              return; // Exit if file name or category is undefined
+        // Create a copy of the productForm to update it with new image URLs
+        let updatedProductForm = { ...productForm, articles: [...productForm.articles] };
+        for (const articleIndex in updatedProductForm.articles) {
+            const article = updatedProductForm.articles[articleIndex];
+            const articleDownloadUrls: string[] = [];
+            // Iterate over images in each article
+            for (const file of article.images) {
+                if (file instanceof File) { // Ensure file is a File object
+                    console.log("File name:", file.name); // Debugging log
+                    console.log("Product category:", productForm.productCategory); // Debugging log
+                    if (!file.name || !productForm.productCategory) {
+                        console.error("File name or product category is undefined");
+                        setIsUploading(false);
+                        return; // Exit if file name or category is undefined
+                    }
+                    // Create a reference to the file location in Firebase storage
+                    const imgRef = ref(storage, `${productForm.productCategory}/${file.name}`);
+                    try {
+                        await uploadBytes(imgRef, file);
+                        const url = await getDownloadURL(imgRef);
+                        articleDownloadUrls.push(url);
+                    } catch (error) {
+                        console.error("Error uploading file:", error);
+                        setIsUploading(false);
+                        return; // Exit on error
+                    }
+                } else {
+                    console.error("Invalid file type:", file);
+                }
             }
-            // Create a reference to the file location in Firebase storage
-            const imgRef = ref(storage, `${productForm.productCategory}/${file.name}`);
-            try {
-              await uploadBytes(imgRef, file);
-              const url = await getDownloadURL(imgRef);
-              articleDownloadUrls.push(url);
-            } catch (error) {
-              setIsUploading(false);
-              return; // Exit on error
-            }
-          }
+            // Update the copied productForm with the new image URLs
+            updatedProductForm.articles[articleIndex] = {
+                ...article,
+                images: articleDownloadUrls,
+            };
         }
-        // Update the copied productForm with the new image URLs
-        updatedProductForm.articles[articleIndex] = {
-          ...article,
-          images: articleDownloadUrls,
-        };
-      }
-      // Push product data to Firebase Database
-      if (productFormEditMode) {
-        await update(dbRef(database, `products/${productForm.id}`), productForm)
-      } else {
-        const newProductRef = push(dbRef(database, `products`));
-        await set(newProductRef, {
-          ...updatedProductForm,
-          id: newProductRef.key,
-          createdAt: new Date().toISOString(),
-        });
-      }
-      dispatch(resetProductStateValues())
-      router.push("/dashboard/listing")
-      setIsUploading(false);
+        // Push product data to Firebase Database
+        if (productFormEditMode) {
+            await update(dbRef(database, `products/${productForm.id}`), updatedProductForm)
+        } else {
+            const newProductRef = push(dbRef(database, `products`));
+            await set(newProductRef, {
+                ...updatedProductForm,
+                id: newProductRef.key,
+                createdAt: new Date().toISOString(),
+            });
+        }
+        dispatch(resetProductStateValues());
+        router.push("/dashboard/listing");
+        setIsUploading(false);
     } catch (error) {
-      console.error("Error uploading product data:", error);
-      setIsUploading(false);
+        console.error("Error uploading product data:", error);
+        setIsUploading(false);
     }
-  };
+};
+
+  // const handleUploadProduct = async (e: { preventDefault: () => void; }) => {
+  //   e.preventDefault();
+
+  //   if (!validateProductForm(productForm))
+  //     return;
+
+  //   setIsUploading(true);
+  //   try {
+  //     // Create a copy of the productForm to update it with new image URLs
+  //     let updatedProductForm = { ...productForm, articles: [...productForm.articles] };
+  //     for (const articleIndex in updatedProductForm.articles) {
+  //       const article = updatedProductForm.articles[articleIndex];
+  //       const articleDownloadUrls = [];
+  //       // Iterate over images in each article
+  //       for (const file of article.images) {
+  //         if (typeof file === "object") {
+  //           console.log("File name:", file.name); // Debugging log
+  //           console.log("Product category:", productForm.productCategory); // Debugging log
+  //           if (!file.name || !productForm.productCategory) {
+  //             console.error("File name or product category is undefined");
+  //             setIsUploading(false);
+  //             return; // Exit if file name or category is undefined
+  //           }
+  //           // Create a reference to the file location in Firebase storage
+  //           const imgRef = ref(storage, `${productForm.productCategory}/${file.name}`);
+  //           try {
+  //             await uploadBytes(imgRef, file);
+  //             const url = await getDownloadURL(imgRef);
+  //             articleDownloadUrls.push(url);
+  //           } catch (error) {
+  //             setIsUploading(false);
+  //             return; // Exit on error
+  //           }
+  //         }
+  //       }
+  //       // Update the copied productForm with the new image URLs
+  //       updatedProductForm.articles[articleIndex] = {
+  //         ...article,
+  //         images: articleDownloadUrls,
+  //       };
+  //     }
+  //     // Push product data to Firebase Database
+  //     if (productFormEditMode) {
+  //       await update(dbRef(database, `products/${productForm.id}`), productForm)
+  //     } else {
+  //       const newProductRef = push(dbRef(database, `products`));
+  //       await set(newProductRef, {
+  //         ...updatedProductForm,
+  //         id: newProductRef.key,
+  //         createdAt: new Date().toISOString(),
+  //       });
+  //     }
+  //     dispatch(resetProductStateValues())
+  //     router.push("/dashboard/listing")
+  //     setIsUploading(false);
+  //   } catch (error) {
+  //     console.error("Error uploading product data:", error);
+  //     setIsUploading(false);
+  //   }
+  // };
 
   return (
     <div className="container mx-auto">

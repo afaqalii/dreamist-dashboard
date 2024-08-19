@@ -5,7 +5,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 const initialState: ProductSliceState = {
     isDialogOpen: false,
     articleEditMode: false,
-    productFormEditMode:false,
+    productFormEditMode: false,
     currentArticle: {
         id: "",
         hexValue: "",
@@ -105,9 +105,26 @@ const productSlice = createSlice({
                 }
             }
         },
-        uploadImages(state, action: PayloadAction<File[]>) {
-            state.currentArticle.images.push(...action.payload);
+        uploadImages(state, action: PayloadAction<File[] | string[]>) {
+            const newImages = action.payload;
+            // Check if the payload contains files or strings and handle accordingly
+            if (newImages.length > 0) {
+                if (typeof newImages[0] === 'string') {
+                    state.currentArticle.images = [
+                        ...state.currentArticle.images.filter(img => typeof img === 'string'),
+                        ...newImages as string[]
+                    ];
+                } else {
+                    state.currentArticle.images = [
+                        ...state.currentArticle.images.filter(img => img instanceof File),
+                        ...newImages as File[]
+                    ];
+                }
+            }
         },
+        // uploadImages(state, action: PayloadAction<File[] | string[]>) {
+        //     state.currentArticle.images.push(...action.payload);
+        // },
         removeImage(state, action: PayloadAction<number>) {
             state.currentArticle.images.splice(action.payload, 1);
         },

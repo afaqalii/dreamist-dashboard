@@ -48,17 +48,20 @@ const ArticleDialog = () => {
             console.error('All fields must be filled.');
         }
     };
-    const handleSaveEdit = () => {
-        dispatch(editArticle(currentArticle));
-        dispatch(closeArticleDialog());
-    };
-
+    
     const handleSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
-            const filesArray = Array.from(event.target.files).map(file => (file));
+            const filesArray: File[] = Array.from(event.target.files);
             dispatch(uploadImages(filesArray));
         }
     };
+    
+    // const handleSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (event.target.files) {
+    //         const filesArray = Array.from(event.target.files).map(file => (file));
+    //         dispatch(uploadImages(filesArray));
+    //     }
+    // };
 
     const handleRemoveImgFile = (index: number) => {
         dispatch(removeImage(index));
