@@ -1,12 +1,13 @@
 'use client';
-import Title from "@/components/ui/Title"
-import { columns } from "./columns"
-import { DataTable } from "./data-table"
+
+import Title from "@/components/ui/Title";
+import { columns } from "./columns";
+import { DataTable } from "./data-table";
 import { useFetchProducts } from "./useFetchProducts";
 import Spinner from "@/components/ui/loader/loader";
 
-export default function page() {
-  const { data, isLoading } = useFetchProducts()
+export default function Page() { // Renamed to 'Page' with an uppercase 'P'
+  const { data, isLoading } = useFetchProducts();
 
   return (
     <div>
@@ -20,5 +21,5 @@ export default function page() {
           <DataTable columns={columns} data={data ?? []} />
       }
     </div>
-  )
+  );
 }

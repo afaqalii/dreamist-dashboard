@@ -1,6 +1,7 @@
 import { ArticleDropdownProps } from '@/lib/interfaces/productSlice';
 import { editArticle, openArticleDialog, removeArticle, setArticleEditMode } from '@/redux/ProductSlice';
 import { AppDispatch } from '@/redux/store';
+import Image from 'next/image';
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 
@@ -33,7 +34,9 @@ const ArticleDropdown = ({ article }: ArticleDropdownProps) => {
                         <div className='flex gap-2'>
                             {article.images.map((selectedFile, index) => (
                                 <div key={index} className="relative max-w-[80px] object-cover">
-                                    <img
+                                    <Image
+                                      width={80}
+                                      height={120}
                                         src={
                                             typeof selectedFile === "object"
                                                 ? URL.createObjectURL(selectedFile)

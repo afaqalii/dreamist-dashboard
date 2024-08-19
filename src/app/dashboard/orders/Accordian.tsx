@@ -2,19 +2,20 @@ import { Select } from '@/components/ui/select';
 import { formatPrice } from '@/lib/helper';
 import { order } from '@/lib/interfaces';
 import moment from 'moment';
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react';
 
 const orderStatusOptions = [
     "pending",
     "delivered",
     "canceled",
     "returned"
-]
+];
+
 const Accordian = ({ order }: { order: order }) => {
     const { fullName, address, province, city, phoneNumber } = order?.orderDetails;
-    const { items: orderedItems } = order
+    const { items: orderedItems } = order;
     const [open, setOpen] = useState(false);
-    const contentRef = useRef(null);
+    const contentRef = useRef<HTMLDivElement>(null);  // Specify the type here
     const formattedDate = moment(order.orderDate).format('MMMM Do YYYY, h:mm a');
 
     const handleButtonClick = () => {
@@ -36,7 +37,7 @@ const Accordian = ({ order }: { order: order }) => {
                 </div>
                 <div onClick={handleSelectClick}>
                     <Select>
-
+                        {/* Additional select options can be added here */}
                     </Select>
                 </div>
             </button>
@@ -44,7 +45,7 @@ const Accordian = ({ order }: { order: order }) => {
                 ref={contentRef}
                 className={`overflow-hidden transition-all duration-500 ease-in-out`}
                 style={{
-                    maxHeight: open ? `${contentRef.current.scrollHeight}px` : '0px'
+                    maxHeight: open && contentRef.current ? `${contentRef.current.scrollHeight}px` : '0px'
                 }}
             >
                 <div className="p-4 bg-gray-900 rounded overflow-x-auto remove-scrollbar">
@@ -57,8 +58,8 @@ const Accordian = ({ order }: { order: order }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {orderedItems?.map((item) => (
-                                <tr className='max-[520px]:text-sm'>
+                            {orderedItems?.map((item, index) => (
+                                <tr key={index} className='max-[520px]:text-sm'>
                                     <td className="border px-4 py-2">
                                         <div className="flex max-[520px]:flex-col gap-5">
                                             <figure className="min-w-[100px] max-w-[80px]">
@@ -90,7 +91,7 @@ const Accordian = ({ order }: { order: order }) => {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default Accordian
+export default Accordian;

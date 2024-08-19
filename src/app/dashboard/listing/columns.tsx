@@ -10,6 +10,54 @@ import { useRouter } from "next/navigation"
 import { useDispatch } from "react-redux"
 import { useDeleteProduct } from "./useDeleteProduct"
 
+const ActionCell = ({ row }: { row: any }) => {
+    const router = useRouter();
+    const dispatch = useDispatch();
+    const { handleDelete } = useDeleteProduct();
+
+    const handleEdit = () => {
+        dispatch(editProductForm(row.original));
+        router.push("/dashboard/products");
+    };
+
+    return (
+        <AlertDialog>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-8 w-8 p-0">
+                        <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={handleEdit} className="py-2">
+                        <Edit2 className="mr-2 h-4 w-4" />
+                        <span>Edit Product</span>
+                    </DropdownMenuItem>
+                    <AlertDialogTrigger>
+                        <DropdownMenuItem className="py-2">
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            <span>Delete Product</span>
+                        </DropdownMenuItem>
+                    </AlertDialogTrigger>
+                </DropdownMenuContent>
+            </DropdownMenu>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete your account
+                        and remove your product from our servers.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => handleDelete(row.original.id)}>Continue</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+};
+
 export const columns: ColumnDef<Product>[] = [
     {
         id: "productImage",
@@ -59,50 +107,51 @@ export const columns: ColumnDef<Product>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => {
-            const router = useRouter();
-            const dispatch = useDispatch();
-            const { handleDelete } = useDeleteProduct()
-            const handleEdit = () => {
-                dispatch(editProductForm(row.original))
-                router.push("/dashboard/products")
-            }
-            return (
-                <AlertDialog>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={handleEdit} className="py-2">
-                                <Edit2 className="mr-2 h-4 w-4" />
-                                <span>Edit Product</span>
-                            </DropdownMenuItem>
-                            <AlertDialogTrigger>
-                                <DropdownMenuItem className="py-2">
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    <span>Delete Product</span>
-                                </DropdownMenuItem>
-                            </AlertDialogTrigger>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete your account
-                                and remove your product from our servers.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(row.original.id)}>Continue</AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
-            )
-        },
+        cell: ActionCell
+        // cell: ({ row }) => {
+        //     const router = useRouter();
+        //     const dispatch = useDispatch();
+        //     const { handleDelete } = useDeleteProduct()
+        //     const handleEdit = () => {
+        //         dispatch(editProductForm(row.original))
+        //         router.push("/dashboard/products")
+        //     }
+        //     return (
+        //         <AlertDialog>
+        //             <DropdownMenu>
+        //                 <DropdownMenuTrigger asChild>
+        //                     <Button variant="ghost" className="h-8 w-8 p-0">
+        //                         <MoreHorizontal className="h-4 w-4" />
+        //                     </Button>
+        //                 </DropdownMenuTrigger>
+        //                 <DropdownMenuContent align="end">
+        //                     <DropdownMenuItem onClick={handleEdit} className="py-2">
+        //                         <Edit2 className="mr-2 h-4 w-4" />
+        //                         <span>Edit Product</span>
+        //                     </DropdownMenuItem>
+        //                     <AlertDialogTrigger>
+        //                         <DropdownMenuItem className="py-2">
+        //                             <Trash2 className="mr-2 h-4 w-4" />
+        //                             <span>Delete Product</span>
+        //                         </DropdownMenuItem>
+        //                     </AlertDialogTrigger>
+        //                 </DropdownMenuContent>
+        //             </DropdownMenu>
+        //             <AlertDialogContent>
+        //                 <AlertDialogHeader>
+        //                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+        //                     <AlertDialogDescription>
+        //                         This action cannot be undone. This will permanently delete your account
+        //                         and remove your product from our servers.
+        //                     </AlertDialogDescription>
+        //                 </AlertDialogHeader>
+        //                 <AlertDialogFooter>
+        //                     <AlertDialogCancel>Cancel</AlertDialogCancel>
+        //                     <AlertDialogAction onClick={() => handleDelete(row.original.id)}>Continue</AlertDialogAction>
+        //                 </AlertDialogFooter>
+        //             </AlertDialogContent>
+        //         </AlertDialog>
+        //     )
+        // },
     }
 ]

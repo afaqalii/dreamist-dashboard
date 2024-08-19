@@ -31,8 +31,8 @@ const ProductPage: React.FC = () => {
     e.preventDefault();
 
     if (!validateProductForm(productForm))
-       return;
-      
+      return;
+
     setIsUploading(true);
     try {
       // Create a copy of the productForm to update it with new image URLs
@@ -121,7 +121,7 @@ const ProductPage: React.FC = () => {
                 <SelectContent>
                   {
                     productForm.colors.map((color) => (
-                      <SelectItem value={color.value}>{color.string}</SelectItem>
+                      <SelectItem key={color.value} value={color.value}>{color.string}</SelectItem>
                     ))
                   }
                 </SelectContent>
@@ -173,8 +173,8 @@ const ProductPage: React.FC = () => {
           <TabsContent value="articles">
             <Button onClick={() => dispatch(openArticleDialog())}>Add Article</Button>
             <ul>
-              {productForm?.articles?.map((article) => (
-                <ArticleDropdown article={article} />
+              {productForm?.articles?.map((article,index) => (
+                <ArticleDropdown key={index} article={article} />
               ))}
             </ul>
           </TabsContent>

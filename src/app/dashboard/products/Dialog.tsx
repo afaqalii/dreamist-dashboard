@@ -24,6 +24,7 @@ import { Switch } from '@/components/ui/switch';
 import { Trash2, Upload } from 'lucide-react';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { isCurrentArticleValid } from '@/lib/helper';
+import Image from 'next/image';
 
 const ArticleDialog = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -138,7 +139,9 @@ const ArticleDialog = () => {
                                     <span className="absolute right-1 top-3 cursor-pointer bg-red-500 rounded-full p-1">
                                         <Trash2 color='white' size="15px" onClick={() => handleRemoveImgFile(index)} />
                                     </span>
-                                    <img
+                                    <Image
+                                        width={"100"}
+                                        height={"100"}
                                         src={typeof selectedFile === "string" ? selectedFile : URL.createObjectURL(selectedFile)}
                                         alt="Selected picture"
                                         className="mt-2 object-cover w-full h-full"
