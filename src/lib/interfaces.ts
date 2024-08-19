@@ -36,16 +36,17 @@ interface items {
   quantity: string,
   size: string,
 }
+interface orderDetails {
+  phoneNumber: string,
+  address: string,
+  fullName: string;
+  city: string,
+  province: string;
+}
 export interface order {
   id: string;
   items: items[];
-  orderDetails: {
-    phoneNumber: string,
-    address: string,
-    fullName: string;
-    city: string,
-    province: string;
-  }
+  orderDetails: orderDetails,
   orderDate: string,
   status: "pending" | "delivered" | "canceled" | "returned"
 }

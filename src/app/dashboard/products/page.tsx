@@ -68,11 +68,6 @@ const ProductPage: React.FC = () => {
           images: articleDownloadUrls,
         };
       }
-      // make an array of productColors from the article colors uploaded
-      const productColors = updatedProductForm.articles.map(article => ({
-        value: article.hexValue,
-        string: article.color,
-      }));
       // Push product data to Firebase Database
       if (productFormEditMode) {
         await update(dbRef(database, `products/${productForm.id}`), productForm)
@@ -80,7 +75,6 @@ const ProductPage: React.FC = () => {
         const newProductRef = push(dbRef(database, `products`));
         await set(newProductRef, {
           ...updatedProductForm,
-          productColors,
           id: newProductRef.key,
           createdAt: new Date().toISOString(),
         });
