@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Spinner from '@/components/ui/loader/loader';
 import Image from 'next/image';
-
+import logo from "../../../public/logo.jpg"
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -47,7 +47,7 @@ const Login = () => {
         <h2 className="text-4xl font-bold mb-12 text-blue border-b-4 border-blue pb-3">Dreamist Login</h2>
         <div className='flex flex-col min-[590px]:flex-row gap-5'>
           <figure className='hidden min-[590px]:block'>
-            <Image src="https://instagram.fpew1-1.fna.fbcdn.net/v/t51.2885-19/87326094_1261732130697060_3845002487434051584_n.jpg?stp=dst-jpg_s150x150&_nc_ht=instagram.fpew1-1.fna.fbcdn.net&_nc_cat=100&_nc_ohc=zqjAL8uT-KoQ7kNvgFRpxGS&gid=deaf320b98a24cd7a4729c6b3ad7533e&edm=AFg4Q8wBAAAA&ccb=7-5&oh=00_AYBEO5vzVHTd-yBGD50QV-Zzryfkx1SYmsuFPyFKuoYrNg&oe=66B50CA1&_nc_sid=0b30b7" alt='Dreamist Logo' width="200" height="200" />
+            <Image src={logo} alt='Dreamist Logo' width="200" height="200" />
           </figure>
           <form className='min-[590px]:w-[60%]' onSubmit={handleSubmit}>
             <div className="mb-4">
