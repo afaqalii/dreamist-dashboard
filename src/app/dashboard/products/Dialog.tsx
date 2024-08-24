@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid';
 import {
     addArticle,
     closeArticleDialog,
-    editArticle,
     removeExtraLargeSize,
     showExtraLargeSize,
     updateQuantity,
@@ -56,13 +55,6 @@ const ArticleDialog = () => {
         }
     };
     
-    // const handleSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     if (event.target.files) {
-    //         const filesArray = Array.from(event.target.files).map(file => (file));
-    //         dispatch(uploadImages(filesArray));
-    //     }
-    // };
-
     const handleRemoveImgFile = (index: number) => {
         dispatch(removeImage(index));
         if (imagesRef.current?.files) {

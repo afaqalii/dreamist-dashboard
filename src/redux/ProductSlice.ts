@@ -107,24 +107,24 @@ const productSlice = createSlice({
         },
         uploadImages(state, action: PayloadAction<File[] | string[]>) {
             const newImages = action.payload;
-            // Check if the payload contains files or strings and handle accordingly
             if (newImages.length > 0) {
+                // If the new images are strings (URLs)
                 if (typeof newImages[0] === 'string') {
                     state.currentArticle.images = [
-                        ...state.currentArticle.images.filter(img => typeof img === 'string'),
-                        ...newImages as string[]
+                        ...state.currentArticle.images,  // Keep existing images
+                        ...newImages as string[]  // Add new image URLs
                     ];
-                } else {
+                } 
+                // If the new images are files (File objects)
+                else if (newImages[0] instanceof File) {
                     state.currentArticle.images = [
-                        ...state.currentArticle.images.filter(img => img instanceof File),
-                        ...newImages as File[]
+                        ...state.currentArticle.images,  // Keep existing images
+                        ...newImages as File[]  // Add new uploaded files
                     ];
                 }
             }
         },
-        // uploadImages(state, action: PayloadAction<File[] | string[]>) {
-        //     state.currentArticle.images.push(...action.payload);
-        // },
+        
         removeImage(state, action: PayloadAction<number>) {
             state.currentArticle.images.splice(action.payload, 1);
         },
