@@ -28,66 +28,69 @@ const ProductPage: React.FC = () => {
 
   const handleUploadProduct = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-
     if (!validateProductForm(productForm)) return;
-
     setIsUploading(true);
     try {
-        // Create a copy of the productForm to update it with new image URLs
-        let updatedProductForm = { ...productForm, articles: [...productForm.articles] };
-        for (const articleIndex in updatedProductForm.articles) {
-            const article = updatedProductForm.articles[articleIndex];
-            const articleDownloadUrls: string[] = [];
-            // Iterate over images in each article
-            for (const file of article.images) {
-                if (file instanceof File) { // Ensure file is a File object
-                    console.log("File name:", file.name); // Debugging log
-                    console.log("Product category:", productForm.productCategory); // Debugging log
-                    if (!file.name || !productForm.productCategory) {
-                        console.error("File name or product category is undefined");
-                        setIsUploading(false);
-                        return; // Exit if file name or category is undefined
-                    }
-                    // Create a reference to the file location in Firebase storage
-                    const imgRef = ref(storage, `${productForm.productCategory}/${file.name}`);
-                    try {
-                        await uploadBytes(imgRef, file);
-                        const url = await getDownloadURL(imgRef);
-                        articleDownloadUrls.push(url);
-                    } catch (error) {
-                        console.error("Error uploading file:", error);
-                        setIsUploading(false);
-                        return; // Exit on error
-                    }
-                } else {
-                    console.error("Invalid file type:", file);
-                }
+      // Create a copy of the productForm to update it with new image URLs
+      let updatedProductForm = { ...productForm, articles: [...productForm.articles] };
+      for (const articleIndex in updatedProductForm.articles) {
+        const article = updatedProductForm.articles[articleIndex];
+        const articleDownloadUrls: string[] = [];
+        // Iterate over images in each article
+        for (const file of article.images) {
+          if (typeof file === "string") {
+            articleDownloadUrls.push(file)
+          } else {
+            if (file instanceof File) { // Ensure file is a File object
+              console.log("File name:", file.name); // Debugging log
+              console.log("Product category:", productForm.productCategory); // Debugging log
+              if (!file.name || !productForm.productCategory) {
+                console.error("File name or product category is undefined");
+                setIsUploading(false);
+                return; // Exit if file name or category is undefined
+              }
+              // Create a reference to the file location in Firebase storage
+              const imgRef = ref(storage, `${productForm.productCategory}/${file.name}`);
+              try {
+                await uploadBytes(imgRef, file);
+                const url = await getDownloadURL(imgRef);
+                articleDownloadUrls.push(url);
+              } catch (error) {
+                console.error("Error uploading file:", error);
+                setIsUploading(false);
+                return; // Exit on error
+              }
             }
-            // Update the copied productForm with the new image URLs
-            updatedProductForm.articles[articleIndex] = {
-                ...article,
-                images: articleDownloadUrls,
-            };
+            else {
+              console.error("Invalid file type:", file);
+            }
+          }
         }
-        // Push product data to Firebase Database
-        if (productFormEditMode) {
-            await update(dbRef(database, `products/${productForm.id}`), updatedProductForm)
-        } else {
-            const newProductRef = push(dbRef(database, `products`));
-            await set(newProductRef, {
-                ...updatedProductForm,
-                id: newProductRef.key,
-                createdAt: new Date().toISOString(),
-            });
-        }
-        dispatch(resetProductStateValues());
-        router.push("/dashboard/listing");
-        setIsUploading(false);
+        // Update the copied productForm with the new image URLs
+        updatedProductForm.articles[articleIndex] = {
+          ...article,
+          images: articleDownloadUrls,
+        };
+      }
+      // Push product data to Firebase Database
+      if (productFormEditMode) {
+        await update(dbRef(database, `products/${productForm.id}`), updatedProductForm)
+      } else {
+        const newProductRef = push(dbRef(database, `products`));
+        await set(newProductRef, {
+          ...updatedProductForm,
+          id: newProductRef.key,
+          createdAt: new Date().toISOString(),
+        });
+      }
+      dispatch(resetProductStateValues());
+      router.push("/dashboard/listing");
+      setIsUploading(false);
     } catch (error) {
-        console.error("Error uploading product data:", error);
-        setIsUploading(false);
+      console.error("Error uploading product data:", error);
+      setIsUploading(false);
     }
-};
+  };
 
   return (
     <div className="container mx-auto">
@@ -177,7 +180,7 @@ const ProductPage: React.FC = () => {
           <TabsContent value="articles">
             <Button onClick={() => dispatch(openArticleDialog())}>Add Article</Button>
             <ul>
-              {productForm?.articles?.map((article,index) => (
+              {productForm?.articles?.map((article, index) => (
                 <ArticleDropdown key={index} article={article} />
               ))}
             </ul>
