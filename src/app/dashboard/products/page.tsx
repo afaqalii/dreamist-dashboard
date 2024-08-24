@@ -153,7 +153,7 @@ const ProductPage: React.FC = () => {
                     <SelectItem value="t-shirt">T-shirt</SelectItem>
                     <SelectItem value="polos">Polos</SelectItem>
                     <SelectItem value="casual-shirts">Casual Shirts</SelectItem>
-                    <SelectItem value="unstiched-fabric">Unstiched Fabric</SelectItem>
+                    <SelectItem value="unstitched-fabric">Unstiched Fabric</SelectItem>
                     <SelectItem value="stitched-shalwar-kameez">Stitched Shalwar Kameez</SelectItem>
                     <SelectItem value="pants">Pants</SelectItem>
                   </SelectContent>
