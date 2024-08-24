@@ -89,67 +89,6 @@ const ProductPage: React.FC = () => {
     }
 };
 
-  // const handleUploadProduct = async (e: { preventDefault: () => void; }) => {
-  //   e.preventDefault();
-
-  //   if (!validateProductForm(productForm))
-  //     return;
-
-  //   setIsUploading(true);
-  //   try {
-  //     // Create a copy of the productForm to update it with new image URLs
-  //     let updatedProductForm = { ...productForm, articles: [...productForm.articles] };
-  //     for (const articleIndex in updatedProductForm.articles) {
-  //       const article = updatedProductForm.articles[articleIndex];
-  //       const articleDownloadUrls = [];
-  //       // Iterate over images in each article
-  //       for (const file of article.images) {
-  //         if (typeof file === "object") {
-  //           console.log("File name:", file.name); // Debugging log
-  //           console.log("Product category:", productForm.productCategory); // Debugging log
-  //           if (!file.name || !productForm.productCategory) {
-  //             console.error("File name or product category is undefined");
-  //             setIsUploading(false);
-  //             return; // Exit if file name or category is undefined
-  //           }
-  //           // Create a reference to the file location in Firebase storage
-  //           const imgRef = ref(storage, `${productForm.productCategory}/${file.name}`);
-  //           try {
-  //             await uploadBytes(imgRef, file);
-  //             const url = await getDownloadURL(imgRef);
-  //             articleDownloadUrls.push(url);
-  //           } catch (error) {
-  //             setIsUploading(false);
-  //             return; // Exit on error
-  //           }
-  //         }
-  //       }
-  //       // Update the copied productForm with the new image URLs
-  //       updatedProductForm.articles[articleIndex] = {
-  //         ...article,
-  //         images: articleDownloadUrls,
-  //       };
-  //     }
-  //     // Push product data to Firebase Database
-  //     if (productFormEditMode) {
-  //       await update(dbRef(database, `products/${productForm.id}`), productForm)
-  //     } else {
-  //       const newProductRef = push(dbRef(database, `products`));
-  //       await set(newProductRef, {
-  //         ...updatedProductForm,
-  //         id: newProductRef.key,
-  //         createdAt: new Date().toISOString(),
-  //       });
-  //     }
-  //     dispatch(resetProductStateValues())
-  //     router.push("/dashboard/listing")
-  //     setIsUploading(false);
-  //   } catch (error) {
-  //     console.error("Error uploading product data:", error);
-  //     setIsUploading(false);
-  //   }
-  // };
-
   return (
     <div className="container mx-auto">
       <ArticleDialog />
@@ -210,7 +149,10 @@ const ProductPage: React.FC = () => {
                   <SelectContent>
                     <SelectItem value="t-shirt">T-shirt</SelectItem>
                     <SelectItem value="polos">Polos</SelectItem>
-                    <SelectItem value="trousers">Trousers</SelectItem>
+                    <SelectItem value="casual-shirts">Casual Shirts</SelectItem>
+                    <SelectItem value="unstiched-fabric">Unstiched Fabric</SelectItem>
+                    <SelectItem value="stitched-shalwar-kameez">Stitched Shalwar Kameez</SelectItem>
+                    <SelectItem value="pants">Pants</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
