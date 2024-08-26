@@ -33,6 +33,7 @@ export function validateProductForm(productForm: productSliceForm): boolean {
     !productForm.productPrice ||
     !productForm.productDescription ||
     !productForm.activeColor ||
+    !productForm.sizeChart ||
     !productForm.productCategory ||
     !productForm.productGender ||
     productForm.articles.length === 0 ||

@@ -21,6 +21,7 @@ const initialState: ProductSliceState = {
         activeColor: "",
         productCategory: "t-shirt",
         productGender: "male",
+        sizeChart: "",
         articles: [],
         colors: [],
     }
@@ -114,7 +115,7 @@ const productSlice = createSlice({
                         ...state.currentArticle.images,  // Keep existing images
                         ...newImages as string[]  // Add new image URLs
                     ];
-                } 
+                }
                 // If the new images are files (File objects)
                 else if (newImages[0] instanceof File) {
                     state.currentArticle.images = [
@@ -124,7 +125,6 @@ const productSlice = createSlice({
                 }
             }
         },
-        
         removeImage(state, action: PayloadAction<number>) {
             state.currentArticle.images.splice(action.payload, 1);
         },
@@ -143,6 +143,7 @@ const productSlice = createSlice({
                 activeColor: "",
                 productCategory: "t-shirt",
                 productGender: "male",
+                sizeChart: "",
                 articles: [],
                 colors: [],
             }
@@ -162,7 +163,13 @@ const productSlice = createSlice({
         },
         setArticleEditMode(state, action: PayloadAction<boolean>) {
             state.articleEditMode = action.payload;
-        }
+        },
+        uploadSizeChart(state, action: PayloadAction<File | string>) {
+            const newImage = action.payload;
+            if (newImage) {
+                state.productForm.sizeChart = newImage
+            }
+        },
     },
 });
 
@@ -192,6 +199,7 @@ export const {
     addProductColor,
     removeProductColor,
     setArticleEditMode,
+    uploadSizeChart
 } = productSlice.actions;
 
 export default productSlice.reducer;

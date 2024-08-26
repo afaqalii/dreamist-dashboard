@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setProductName, setProductPrice, setSalePercentage, setProductDescription, setActiveColor, setProductCategory, setProductGender, addArticle, editArticle, removeArticle, openArticleDialog, resetProductStateValues } from '@/redux/ProductSlice';
 import { RootState } from '@/redux/store';
@@ -16,15 +16,16 @@ import Spinner from '@/components/ui/loader/loader';
 import { database, storage } from '@/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { push, set, ref as dbRef, update } from 'firebase/database';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { validateProductForm } from '@/lib/helper';
+import SizeChartUpload from './SizeChartUpload';
 
 const ProductPage: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const location = usePathname()
   const { productForm, productFormEditMode } = useSelector((state: RootState) => state.product);
   const [isUploading, setIsUploading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleUploadProduct = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -140,6 +141,7 @@ const ProductPage: React.FC = () => {
               <Label>Product Description</Label>
               <Textarea value={productForm.productDescription} onChange={(e) => dispatch(setProductDescription(e.target.value))} />
             </div>
+            <SizeChartUpload selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
             <div className='flex gap-5 my-5'>
               <div className="form-group">
                 <Label>Product Category</Label>

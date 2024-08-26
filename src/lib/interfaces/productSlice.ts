@@ -31,6 +31,7 @@ export interface productSliceForm {
     salePercentage?: string;
     productDescription: string;
     activeColor: string;
+    sizeChart:string | File, 
     productCategory: string;
     productGender: string;
     articles: Article[];
