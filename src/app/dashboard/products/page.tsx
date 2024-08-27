@@ -1,7 +1,7 @@
 'use client'
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setProductName, setProductPrice, setSalePercentage, setProductDescription, setActiveColor, setProductCategory, setProductGender, addArticle, editArticle, removeArticle, openArticleDialog, resetProductStateValues } from '@/redux/ProductSlice';
+import { setProductName, setProductPrice, setSalePercentage, setProductDescription, setActiveColor, setProductCategory, setProductGender, openArticleDialog, resetProductStateValues, setPantSize, setClothLength, activateClothLength, deActivateClothLength } from '@/redux/ProductSlice';
 import { RootState } from '@/redux/store';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
@@ -25,7 +25,7 @@ const ProductPage: React.FC = () => {
   const router = useRouter();
   const { productForm, productFormEditMode } = useSelector((state: RootState) => state.product);
   const [isUploading, setIsUploading] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null | File>(productForm.sizeChart ?? "");
 
   const handleUploadProduct = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -34,6 +34,7 @@ const ProductPage: React.FC = () => {
     try {
       // Create a copy of the productForm to update it with new image URLs
       let updatedProductForm = { ...productForm, articles: [...productForm.articles] };
+      let sizeChart = updatedProductForm.sizeChart;
       for (const articleIndex in updatedProductForm.articles) {
         const article = updatedProductForm.articles[articleIndex];
         const articleDownloadUrls: string[] = [];
@@ -73,6 +74,13 @@ const ProductPage: React.FC = () => {
           images: articleDownloadUrls,
         };
       }
+      // upload the size chart to firebase
+      if (typeof sizeChart === 'object') {
+        const sizeChartRef = ref(storage, `sizeChart/${productForm.id}`)
+        await uploadBytes(sizeChartRef, sizeChart)
+        sizeChart = await getDownloadURL(sizeChartRef)
+        updatedProductForm.sizeChart = sizeChart
+      }
       // Push product data to Firebase Database
       if (productFormEditMode) {
         await update(dbRef(database, `products/${productForm.id}`), updatedProductForm)
@@ -81,6 +89,7 @@ const ProductPage: React.FC = () => {
         await set(newProductRef, {
           ...updatedProductForm,
           id: newProductRef.key,
+          sizeChart,
           createdAt: new Date().toISOString(),
         });
       }
@@ -132,6 +141,10 @@ const ProductPage: React.FC = () => {
                 </SelectContent>
               </Select>
             </div>
+            <div className='form-group'>
+              <Label>Fabric Length (meters)</Label>
+              <Input disabled={productForm.fabricLength === undefined || productForm.fabricLength === null} value={productForm.fabricLength ?? ""} onChange={(e) => dispatch(setClothLength(e.target.value))} />
+            </div>
             {/* color picker component */}
             <div>
               <Label>Add colors for your article</Label>
@@ -147,6 +160,12 @@ const ProductPage: React.FC = () => {
                 <Label>Product Category</Label>
                 <Select value={productForm.productCategory} onValueChange={(value) => {
                   dispatch(setProductCategory(value));
+                  if (value === "pants")
+                    dispatch(setPantSize())
+                  if (value === "unstitched-fabric")
+                    dispatch(activateClothLength())
+                  else
+                    dispatch(deActivateClothLength())
                 }}>
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="T-shirt" />

@@ -12,7 +12,9 @@ import {
     removeImage,
     removeAllImages,
     updateSelectedColor,
-    updateArticle
+    updateArticle,
+    addPantSize,
+    removePantSize
 } from '@/redux/ProductSlice';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -20,7 +22,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Trash2, Upload } from 'lucide-react';
+import { Trash2, Upload, Plus, Minus } from 'lucide-react';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { isCurrentArticleValid } from '@/lib/helper';
 import Image from 'next/image';
@@ -47,14 +49,14 @@ const ArticleDialog = () => {
             console.error('All fields must be filled.');
         }
     };
-    
+
     const handleSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const filesArray: File[] = Array.from(event.target.files);
             dispatch(uploadImages(filesArray));
         }
     };
-    
+
     const handleRemoveImgFile = (index: number) => {
         dispatch(removeImage(index));
         if (imagesRef.current?.files) {
@@ -77,6 +79,13 @@ const ArticleDialog = () => {
         }
     };
 
+    const handleAddSize = () => {
+        dispatch(addPantSize());
+    };
+
+    const handleRemoveSize = () => {
+        dispatch(removePantSize());
+    };
     return (
         <Dialog open={isDialogOpen}>
             <DialogContent>
@@ -95,20 +104,26 @@ const ArticleDialog = () => {
                         </Select>
                     </div>
                 </DialogTitle>
-                <div>
-                    <p>{showSize ? 'Remove' : 'Show'} XXL size</p>
-                    <Switch onClick={() => {
-                        if (showSize) {
-                            dispatch(removeExtraLargeSize());
-                            setShowSize(false);
-                        } else {
-                            dispatch(showExtraLargeSize());
-                            setShowSize(true);
-                        }
-                    }} className='mt-2' />
-                </div>
+                {(productForm.productCategory !== "pants" && productForm.productCategory !== "unstitched-fabric") && (
+                    <div>
+                        <p>{showSize ? 'Remove' : 'Show'} XXL size</p>
+                        <Switch
+                            onClick={() => {
+                                if (showSize) {
+                                    dispatch(removeExtraLargeSize());
+                                    setShowSize(false);
+                                } else {
+                                    dispatch(showExtraLargeSize());
+                                    setShowSize(true);
+                                }
+                            }}
+                            className='mt-2'
+                        />
+                    </div>
+                )}
+
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-                    {currentArticle.productSizeAndQuantity.map((info, index) => (
+                    {productForm.productCategory !== "unstitched-fabric" && currentArticle.productSizeAndQuantity.map((info, index) => (
                         <div key={index}>
                             <span className='capitalize'>{info.string}</span>
                             <Input type='number' className='px-2 rounded-sm border-black' value={info.quantity} onChange={(e) =>
@@ -117,6 +132,16 @@ const ArticleDialog = () => {
                         </div>
                     ))}
                 </div>
+                {productForm.productCategory === 'pants' && (
+                    <div className="flex items-center space-x-2">
+                        <Button variant="outline" onClick={handleAddSize} className="flex items-center">
+                            <Plus className="mr-2" /> Add Size
+                        </Button>
+                        <Button variant="outline" onClick={handleRemoveSize} className="flex items-center">
+                            <Minus className="mr-2" /> Remove Size
+                        </Button>
+                    </div>
+                )}
                 <section>
                     <input
                         ref={imagesRef}

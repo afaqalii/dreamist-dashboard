@@ -1,4 +1,4 @@
-import { sizeAndQuantityArray } from '@/lib/data';
+import { sizeAndQuantityArray, sizeAndQuantityArrayForPants } from '@/lib/data';
 import { Article, Color, productSliceForm, ProductSliceState } from '@/lib/interfaces/productSlice';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -106,23 +106,13 @@ const productSlice = createSlice({
                 }
             }
         },
-        uploadImages(state, action: PayloadAction<File[] | string[]>) {
+        uploadImages(state, action: PayloadAction<File[]>) {
             const newImages = action.payload;
             if (newImages.length > 0) {
-                // If the new images are strings (URLs)
-                if (typeof newImages[0] === 'string') {
-                    state.currentArticle.images = [
-                        ...state.currentArticle.images,  // Keep existing images
-                        ...newImages as string[]  // Add new image URLs
-                    ];
-                }
-                // If the new images are files (File objects)
-                else if (newImages[0] instanceof File) {
-                    state.currentArticle.images = [
-                        ...state.currentArticle.images,  // Keep existing images
-                        ...newImages as File[]  // Add new uploaded files
-                    ];
-                }
+                state.currentArticle.images = [
+                    ...state.currentArticle.images,  // Keep existing images
+                    ...newImages as File[]  // Add new uploaded files
+                ];
             }
         },
         removeImage(state, action: PayloadAction<number>) {
@@ -133,6 +123,50 @@ const productSlice = createSlice({
         },
         updateSelectedColor(state, action: PayloadAction<string>) {
             state.currentArticle.hexValue = action.payload;
+        },
+        addProductColor(state, action: PayloadAction<Color>) {
+            state.productForm.colors.push(action.payload);
+        },
+        removeProductColor(state, action: PayloadAction<number>) {
+            state.productForm.colors.splice(action.payload, 1);
+        },
+        setArticleEditMode(state, action: PayloadAction<boolean>) {
+            state.articleEditMode = action.payload;
+        },
+        uploadSizeChart(state, action: PayloadAction<File | string>) {
+            const newImage = action.payload;
+            if (newImage) {
+                state.productForm.sizeChart = newImage
+            }
+        },
+        setPantSize(state) {
+            state.currentArticle.productSizeAndQuantity = sizeAndQuantityArrayForPants;
+        },
+        activateClothLength(state) {
+            state.productForm.fabricLength = "4";
+        },
+        deActivateClothLength(state) {
+            state.productForm.fabricLength = null;
+        },
+        setClothLength(state, action: PayloadAction<string>) {
+            state.productForm.fabricLength = action.payload;
+        },
+        addPantSize(state) {
+            if (state.productForm.productCategory === 'pants') {
+                const lastSizeEntry = state.currentArticle.productSizeAndQuantity[state.currentArticle.productSizeAndQuantity.length - 1];
+                const newSize = lastSizeEntry ? (parseInt(lastSizeEntry.value) + 2).toString() : '30'; // Starting size is '30'
+
+                state.currentArticle.productSizeAndQuantity.push({
+                    string: newSize,
+                    value: newSize,
+                    quantity: 1,  // Default quantity set to 1
+                });
+            }
+        },
+        removePantSize(state) {
+            if (state.productForm.productCategory === 'pants' && state.currentArticle.productSizeAndQuantity.length > 0) {
+                state.currentArticle.productSizeAndQuantity.pop();
+            }
         },
         resetProductStateValues(state) {
             state.productForm = {
@@ -154,21 +188,6 @@ const productSlice = createSlice({
                 images: [],
                 productSizeAndQuantity: sizeAndQuantityArray
             };
-        },
-        addProductColor(state, action: PayloadAction<Color>) {
-            state.productForm.colors.push(action.payload);
-        },
-        removeProductColor(state, action: PayloadAction<number>) {
-            state.productForm.colors.splice(action.payload, 1);
-        },
-        setArticleEditMode(state, action: PayloadAction<boolean>) {
-            state.articleEditMode = action.payload;
-        },
-        uploadSizeChart(state, action: PayloadAction<File | string>) {
-            const newImage = action.payload;
-            if (newImage) {
-                state.productForm.sizeChart = newImage
-            }
         },
     },
 });
@@ -199,7 +218,13 @@ export const {
     addProductColor,
     removeProductColor,
     setArticleEditMode,
-    uploadSizeChart
+    uploadSizeChart,
+    setPantSize,
+    addPantSize,
+    removePantSize,
+    activateClothLength,
+    setClothLength,
+    deActivateClothLength
 } = productSlice.actions;
 
 export default productSlice.reducer;

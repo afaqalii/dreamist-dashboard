@@ -32,28 +32,55 @@ export const MenuItems = [
 // product size and quantity array 
 export const sizeAndQuantityArray = [
     {
-        string:"small",
+        string: "small",
         value: "s",
         quantity: 1,
     },
     {
-        string:"medium",
+        string: "medium",
         value: "m",
         quantity: 1,
     },
     {
-        string:"large",
+        string: "large",
         value: "l",
         quantity: 1,
     },
     {
-        string:"extra large",
+        string: "extra large",
         value: "xl",
         quantity: 1,
     },
     {
-        string:"extra extra large",
+        string: "extra extra large",
         value: "xxl",
+        quantity: 1,
+    },
+]
+export const sizeAndQuantityArrayForPants = [
+    {
+        string: "30",
+        value: "30",
+        quantity: 1,
+    },
+    {
+        string: "32",
+        value: "32",
+        quantity: 1,
+    },
+    {
+        string: "34",
+        value: "34",
+        quantity: 1,
+    },
+    {
+        string: "36",
+        value: "36",
+        quantity: 1,
+    },
+    {
+        string: "38",
+        value: "38",
         quantity: 1,
     },
 ]

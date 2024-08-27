@@ -4,8 +4,8 @@ import { useDispatch } from "react-redux";
 
 // Define your action creator type
 interface SizeChartPropsType {
-  selectedImage: string | null;
-  setSelectedImage: (arg1: string | null) => void;
+  selectedImage: string | null | File;
+  setSelectedImage: (arg1: string | null | File) => void;
 }
 
 const SizeChartUpload: React.FC<SizeChartPropsType> = ({ selectedImage, setSelectedImage }) => {
@@ -29,9 +29,8 @@ const SizeChartUpload: React.FC<SizeChartPropsType> = ({ selectedImage, setSelec
       alert("File size should be less than 2MB");
       return;
     }
-    const imageURL = URL.createObjectURL(file);
-    setSelectedImage(imageURL); // Set the image URL in state
-    dispatch(uploadSizeChart(imageURL)); // Dispatch the action with the image URL
+    setSelectedImage(file); // Set the image URL in state
+    dispatch(uploadSizeChart(file)); // Dispatch the action with the image URL
   };
 
   // Function to trigger the hidden file input click
@@ -62,7 +61,7 @@ const SizeChartUpload: React.FC<SizeChartPropsType> = ({ selectedImage, setSelec
         <div className="mt-4">
           <p>Preview:</p>
           <img
-            src={selectedImage}
+            src={typeof selectedImage === "object" ? URL.createObjectURL(selectedImage) : selectedImage}
             alt="Size Chart Preview"
             className="max-w-xs mt-2"
           />

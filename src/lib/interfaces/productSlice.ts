@@ -1,3 +1,8 @@
+export interface sizeAndQantityState {
+    string: string,
+    value: string,
+    quantity: number
+}
 export interface Article {
     id: string;
     hexValue: string,
@@ -8,11 +13,7 @@ export interface Article {
 export interface ArticleDropdownProps {
     article: Article;
 }
-export interface sizeAndQantityState {
-    string: string,
-    value: string,
-    quantity: number
-}
+
 export interface Color {
     value: string;
     string: string;
@@ -25,13 +26,14 @@ export interface currentArticleForm {
     productSizeAndQuantity: sizeAndQantityState[];
 }
 export interface productSliceForm {
-    id?:string; // because we don't have ID before adding the productForm to database thats why its optional or can be undefined
+    id?: string; // because we don't have ID before adding the productForm to database thats why its optional or can be undefined
     productName: string;
     productPrice: string;
+    fabricLength?: string | undefined | null;
     salePercentage?: string;
     productDescription: string;
     activeColor: string;
-    sizeChart:string | File, 
+    sizeChart: string | File,
     productCategory: string;
     productGender: string;
     articles: Article[];
