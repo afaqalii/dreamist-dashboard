@@ -28,7 +28,6 @@ export const MenuItems = [
     },
 ]
 
-
 // product size and quantity array 
 export const sizeAndQuantityArray = [
     {
