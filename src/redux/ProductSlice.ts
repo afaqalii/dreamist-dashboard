@@ -33,6 +33,25 @@ const productSlice = createSlice({
     reducers: {
         openArticleDialog(state) {
             state.isDialogOpen = true;
+            if (!state.articleEditMode) { // if it is not edit mode then clear the dialog values
+                if (state.productForm.productCategory === "unstitched-fabric") {
+                    state.currentArticle = {
+                        id: "",
+                        hexValue: "",
+                        color: "",
+                        images: [],
+                        taanQuantity: null
+                    }
+                } else {
+                    state.currentArticle = {
+                        id: "",
+                        hexValue: "",
+                        color: "",
+                        images: [],
+                        productSizeAndQuantity: sizeAndQuantityArray,
+                    }
+                }
+            }
         },
         closeArticleDialog(state) {
             state.isDialogOpen = false;
@@ -92,14 +111,15 @@ const productSlice = createSlice({
             state.productForm.articles = state.productForm.articles.filter(article => article.id !== action.payload);
         },
         removeExtraLargeSize(state) {
-            state.currentArticle.productSizeAndQuantity = state.currentArticle.productSizeAndQuantity.filter((x) => x.value !== "xxl");
+            if (state.currentArticle.productSizeAndQuantity)
+                state.currentArticle.productSizeAndQuantity = state.currentArticle.productSizeAndQuantity.filter((x) => x.value !== "xxl");
         },
         showExtraLargeSize(state) {
             state.currentArticle.productSizeAndQuantity = [...sizeAndQuantityArray];
         },
         updateQuantity(state, action: PayloadAction<{ size: string, quantity: number }>) {
             const { size, quantity } = action.payload;
-            if (quantity >= 0) {
+            if (quantity >= 0 && state.currentArticle.productSizeAndQuantity) {
                 const sizeItem = state.currentArticle.productSizeAndQuantity.find(item => item.value === size);
                 if (sizeItem) {
                     sizeItem.quantity = quantity;
@@ -121,8 +141,9 @@ const productSlice = createSlice({
         removeAllImages(state) {
             state.currentArticle.images = [];
         },
-        updateSelectedColor(state, action: PayloadAction<string>) {
-            state.currentArticle.hexValue = action.payload;
+        updateSelectedColor(state, action: PayloadAction<Color>) {
+            state.currentArticle.hexValue = action.payload.value;
+            state.currentArticle.color = action.payload.string
         },
         addProductColor(state, action: PayloadAction<Color>) {
             state.productForm.colors.push(action.payload);
@@ -144,15 +165,19 @@ const productSlice = createSlice({
         },
         activateClothLength(state) {
             state.productForm.fabricLength = "4";
+            state.currentArticle.taanQuantity = null;
+            state.currentArticle.productSizeAndQuantity = null;
         },
         deActivateClothLength(state) {
             state.productForm.fabricLength = null;
+            state.currentArticle.productSizeAndQuantity = sizeAndQuantityArray;
+            state.currentArticle.taanQuantity = null
         },
         setClothLength(state, action: PayloadAction<string>) {
             state.productForm.fabricLength = action.payload;
         },
         addPantSize(state) {
-            if (state.productForm.productCategory === 'pants') {
+            if (state.productForm.productCategory === 'pants' && state.currentArticle.productSizeAndQuantity) {
                 const lastSizeEntry = state.currentArticle.productSizeAndQuantity[state.currentArticle.productSizeAndQuantity.length - 1];
                 const newSize = lastSizeEntry ? (parseInt(lastSizeEntry.value) + 2).toString() : '30'; // Starting size is '30'
 
@@ -164,9 +189,12 @@ const productSlice = createSlice({
             }
         },
         removePantSize(state) {
-            if (state.productForm.productCategory === 'pants' && state.currentArticle.productSizeAndQuantity.length > 0) {
+            if (state.productForm.productCategory === 'pants' && state.currentArticle.productSizeAndQuantity && state.currentArticle.productSizeAndQuantity.length > 0) {
                 state.currentArticle.productSizeAndQuantity.pop();
             }
+        },
+        setTaanQuantity(state, action: PayloadAction<number | null>) {
+            state.currentArticle.taanQuantity = action.payload
         },
         resetProductStateValues(state) {
             state.productForm = {
@@ -224,7 +252,8 @@ export const {
     removePantSize,
     activateClothLength,
     setClothLength,
-    deActivateClothLength
+    deActivateClothLength,
+    setTaanQuantity
 } = productSlice.actions;
 
 export default productSlice.reducer;

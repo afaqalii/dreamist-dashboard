@@ -1,6 +1,7 @@
 import { ArticleDropdownProps } from '@/lib/interfaces/productSlice';
 import { editArticle, openArticleDialog, removeArticle, setArticleEditMode } from '@/redux/ProductSlice';
 import { AppDispatch } from '@/redux/store';
+import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
@@ -19,11 +20,12 @@ const ArticleDropdown = ({ article }: ArticleDropdownProps) => {
     }
     return (
         <div className='mt-5'>
-            <div onClick={() => setIsAccordianOpen(!isAccordianOpen)} className='flex justify-between p-5 bg-white text-blue cursor-pointer'>
-                <h1 className='text-blue'>{article.color} Article</h1>
+            <div onClick={() => setIsAccordianOpen(!isAccordianOpen)} className='flex justify-between p-5 bg-gray-200 rounded-sm text-blue cursor-pointer'>
+                <h1 className='text-blue capitalize'>{article.color} Article</h1>
                 <div className='flex items-center gap-3'>
                     <p onClick={handleDelete}>Delete</p>
                     <p onClick={handleEdit}>Edit</p>
+                    <ChevronDown />
                 </div>
             </div>
             <div className={`grid overflow-hidden transition-all duration-300 ease-in-out ${isAccordianOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
@@ -35,8 +37,8 @@ const ArticleDropdown = ({ article }: ArticleDropdownProps) => {
                             {article.images.map((selectedFile, index) => (
                                 <div key={index} className="relative max-w-[80px] object-cover">
                                     <Image
-                                      width={80}
-                                      height={120}
+                                        width={80}
+                                        height={120}
                                         src={
                                             typeof selectedFile === "object"
                                                 ? URL.createObjectURL(selectedFile)

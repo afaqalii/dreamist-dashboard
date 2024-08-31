@@ -1,10 +1,15 @@
-import { Article, productSliceForm } from "./interfaces/productSlice";
+import { Article, currentArticleForm, productSliceForm } from "./interfaces/productSlice";
 
-export const isCurrentArticleValid = (article: Article): boolean => {
-  return article.hexValue !== '' &&
-    article.images.length > 0 &&
-    article.productSizeAndQuantity.length > 0;
+export const isCurrentArticleValid = (article: currentArticleForm): boolean => {
+  return (
+    article.color !== '' &&
+    article.hexValue !== '' &&
+    article.images.length > 0 
+    // Array.isArray(article.productSizeAndQuantity) && 
+    // article.productSizeAndQuantity.length > 0 
+  );
 };
+
 export const calculatePrice = (price: string, percentage: string) => {
   let Cpercentage = parseInt(percentage);
   let CPrice = parseInt(price);
@@ -43,7 +48,6 @@ export function validateProductForm(productForm: productSliceForm): boolean {
   } else
     return true;
 }
-
 
 export const formatPrice = (price: string) => {
   return `PKR ${parseInt(price).toLocaleString()}`;

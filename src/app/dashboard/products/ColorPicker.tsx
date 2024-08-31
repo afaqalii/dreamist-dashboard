@@ -11,7 +11,7 @@ import { Trash } from 'lucide-react';
 const ColorPicker: React.FC = () => {
   const dispatch = useDispatch();
   const colors = useSelector((state: RootState) => state.product.productForm.colors);
-  const [newColor, setNewColor] = useState<string>('');
+  const [newColor, setNewColor] = useState<string>('#000');
   const [newColorString, setNewColorString] = useState<string>('');
 
   const handleColorSelect = (color: string) => {

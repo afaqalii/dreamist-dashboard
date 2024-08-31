@@ -1,14 +1,14 @@
-import { Color, sizeAndQantityState } from "./interfaces/productSlice";
-export interface Article {
-  id: string;
-  hexValue: string,
-  color: string,
-  images: string[],
-  productSizeAndQuantity: sizeAndQantityState[];
-}
+import { Article, Color, sizeAndQantityState } from "./interfaces/productSlice";
 export interface UIState {
   isSidebarOpen: boolean;
 }
+// export interface Article {
+//   id: string;
+//   hexValue: string,
+//   color: string,
+//   images: string[],
+//   productSizeAndQuantity: sizeAndQantityState[];
+// }
 export interface TitleProps {
   children: React.ReactNode;
   className?: string;

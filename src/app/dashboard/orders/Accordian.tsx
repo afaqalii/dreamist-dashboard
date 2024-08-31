@@ -11,7 +11,7 @@ const orderStatusOptions = [
     "returned"
 ];
 
-const Accordian = ({ order }: { order: order }) => {
+const Accordian = ({ order }) => {
     const { fullName, address, province, city, phoneNumber } = order?.orderDetails;
     const { items: orderedItems } = order;
     const [open, setOpen] = useState(false);

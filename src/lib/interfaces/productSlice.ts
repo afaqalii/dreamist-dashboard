@@ -23,7 +23,8 @@ export interface currentArticleForm {
     hexValue: string;
     color: string;
     images: (string | File)[];
-    productSizeAndQuantity: sizeAndQantityState[];
+    taanQuantity?: number | null,
+    productSizeAndQuantity?: sizeAndQantityState[] | null;
 }
 export interface productSliceForm {
     id?: string; // because we don't have ID before adding the productForm to database thats why its optional or can be undefined

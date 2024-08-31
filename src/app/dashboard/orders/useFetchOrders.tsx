@@ -3,8 +3,8 @@ import { ref, get } from 'firebase/database';
 import { useQuery } from '@tanstack/react-query';
 import { Product } from '@/lib/interfaces';
 
-const fetchProducts = async (): Promise<Product[]> => {
-    const dbRef = ref(database, '/products'); // Update this path to match your Firebase structure
+const fetchOrders = async (): Promise<Product[]> => {
+    const dbRef = ref(database, '/orders'); // Update this path to match your Firebase structure
     const snapshot = await get(dbRef);
 
     if (!snapshot.exists()) {
@@ -14,9 +14,9 @@ const fetchProducts = async (): Promise<Product[]> => {
     return Object.values(snapshot.val()) as Product[];
 };
 
-export const useFetchProducts = () => {
+export const useFetchOrders = () => {
     return useQuery<Product[]>({
-        queryKey: ['products'],
-        queryFn: fetchProducts,
+        queryKey: ['orders'],
+        queryFn: fetchOrders,
     });
 };

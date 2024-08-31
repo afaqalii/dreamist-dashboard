@@ -14,7 +14,9 @@ import {
     updateSelectedColor,
     updateArticle,
     addPantSize,
-    removePantSize
+    removePantSize,
+    setTaanQuantity,
+    setArticleEditMode
 } from '@/redux/ProductSlice';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -26,6 +28,7 @@ import { Trash2, Upload, Plus, Minus } from 'lucide-react';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { isCurrentArticleValid } from '@/lib/helper';
 import Image from 'next/image';
+import { Article } from '@/lib/interfaces/productSlice';
 
 const ArticleDialog = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -35,11 +38,16 @@ const ArticleDialog = () => {
 
     const handleArticle = () => {
         if (currentArticle && isCurrentArticleValid(currentArticle)) {
-            if (articleEditMode)
-                dispatch(updateArticle(currentArticle))
-            else {
+            const validArticle: Article = {
+                ...currentArticle,
+                productSizeAndQuantity: currentArticle.productSizeAndQuantity || [], // Ensure it's an array
+            };
+
+            if (articleEditMode) {
+                dispatch(updateArticle(validArticle));
+            } else {
                 const newArticle = {
-                    ...currentArticle,
+                    ...validArticle,
                     id: uuidv4(),
                 };
                 dispatch(addArticle(newArticle));
@@ -47,8 +55,10 @@ const ArticleDialog = () => {
             dispatch(closeArticleDialog());
         } else {
             console.error('All fields must be filled.');
+            alert("All fields must be filled.")
         }
     };
+
 
     const handleSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
@@ -92,7 +102,11 @@ const ArticleDialog = () => {
                 <DialogTitle>
                     <div>
                         <Label>Select Article Color</Label>
-                        <Select value={currentArticle.hexValue} onValueChange={(value) => dispatch(updateSelectedColor(value))}>
+                        <Select value={currentArticle.hexValue} onValueChange={(value) => {
+                            let selected = productForm.colors.find((col) => col.value === value)
+                            if (selected)
+                                dispatch(updateSelectedColor(selected))
+                        }}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select color" />
                             </SelectTrigger>
@@ -104,6 +118,21 @@ const ArticleDialog = () => {
                         </Select>
                     </div>
                 </DialogTitle>
+                {
+                    productForm.productCategory === "unstitched-fabric" &&
+                    <div>
+                        <span className='capitalize'>Add Quantity</span>
+                        <Input type='number' placeholder='Enter quantity' className='px-2 rounded-sm border-black' value={currentArticle.taanQuantity !== undefined && currentArticle.taanQuantity !== null ? currentArticle.taanQuantity : ''} onChange={(e) => {
+                            let value = parseInt(e.target.value);
+                            if (!isNaN(value)) {
+                                dispatch(setTaanQuantity(value));
+                            } else {
+                                dispatch(setTaanQuantity(null));
+                            }
+                        }}
+                        />
+                    </div>
+                }
                 {(productForm.productCategory !== "pants" && productForm.productCategory !== "unstitched-fabric") && (
                     <div>
                         <p>{showSize ? 'Remove' : 'Show'} XXL size</p>
@@ -123,7 +152,7 @@ const ArticleDialog = () => {
                 )}
 
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-                    {productForm.productCategory !== "unstitched-fabric" && currentArticle.productSizeAndQuantity.map((info, index) => (
+                    {productForm.productCategory !== "unstitched-fabric" && currentArticle.productSizeAndQuantity && currentArticle.productSizeAndQuantity.map((info, index) => (
                         <div key={index}>
                             <span className='capitalize'>{info.string}</span>
                             <Input type='number' className='px-2 rounded-sm border-black' value={info.quantity} onChange={(e) =>
