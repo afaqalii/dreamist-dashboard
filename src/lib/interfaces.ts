@@ -27,27 +27,29 @@ export interface Product {
   colors: Color[],
 }
 
-interface items {
-  id: string,
-  color: string,
-  images: string[],
-  productName: string,
-  productPrice: string,
-  quantity: string,
-  size: string,
-}
-interface orderDetails {
-  phoneNumber: string,
-  address: string,
-  fullName: string;
-  city: string,
-  province: string;
-}
-export interface order {
+export interface Items {
   id: string;
-  items: items[];
-  orderDetails: orderDetails,
-  orderDate: string,
-  status: "pending" | "delivered" | "canceled" | "returned"
+  color: string;
+  image: string;
+  name: string;
+  price: string;
+  quantity: string;
+  size: string;
 }
 
+export interface OrderDetails {
+  phoneNumber: string;
+  address: string;
+  fullName: string;
+  city: string;
+  province: string;
+  email: string;
+}
+
+export interface Order {
+  id: string;
+  items: Items[];
+  orderDetails: OrderDetails;
+  orderDate: string;
+  status: "pending" | "delivered" | "canceled" | "returned";
+}
