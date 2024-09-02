@@ -67,7 +67,7 @@ export const columns: ColumnDef<Product>[] = [
             const imageUrl = article?.images?.[0]
 
             return (
-                imageUrl ? <Image src={imageUrl} alt="Product Image" width={50} height={50} /> : "No Image"
+                typeof imageUrl === "string" ? <Image src={imageUrl} alt="Product Image" width={50} height={50} /> : "No Image"
             )
         },
     },
@@ -91,7 +91,7 @@ export const columns: ColumnDef<Product>[] = [
             const formatted = new Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "PKR",
-              }).format(price);
+            }).format(price);
 
             return <div className="text-right font-medium">{formatted}</div>
         },

@@ -158,7 +158,7 @@ export const columns: ColumnDef<Order>[] = [
         cell: ({ row }) => new Date(row.original.orderDate).toLocaleDateString(),
     },
     {
-        accessorKey: "status",
+        accessorKey: "orderStatus",
         header: "Order Status",
     },
     {
