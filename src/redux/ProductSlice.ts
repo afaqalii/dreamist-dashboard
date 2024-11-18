@@ -48,7 +48,7 @@ const productSlice = createSlice({
                         hexValue: "",
                         color: "",
                         images: [],
-                        productSizeAndQuantity: sizeAndQuantityArray,
+                        productSizeAndQuantity: state.productForm.productCategory === "pants" ? sizeAndQuantityArrayForPants : sizeAndQuantityArray,
                     }
                 }
             }

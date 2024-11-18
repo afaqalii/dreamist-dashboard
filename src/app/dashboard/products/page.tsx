@@ -160,12 +160,12 @@ const ProductPage: React.FC = () => {
                 <Label>Product Category</Label>
                 <Select value={productForm.productCategory} onValueChange={(value) => {
                   dispatch(setProductCategory(value));
-                  if (value === "pants")
-                    dispatch(setPantSize())
-                  if (value === "unstitched-fabric")
-                    dispatch(activateClothLength())
-                  else
-                    dispatch(deActivateClothLength())
+                  // if (value === "pants")
+                  //   dispatch(setPantSize())
+                  // if (value === "unstitched-fabric")
+                  //   dispatch(activateClothLength())
+                  // else
+                  //   dispatch(deActivateClothLength())
                 }}>
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="T-shirt" />
