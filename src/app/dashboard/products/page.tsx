@@ -124,6 +124,15 @@ const ProductPage: React.FC = () => {
               <Label>Sale Percentage</Label>
               <Input value={productForm.salePercentage} onChange={(e) => dispatch(setSalePercentage(e.target.value))} />
             </div>
+            <div className='form-group'>
+              <Label>Fabric Length (meters)</Label>
+              <Input disabled={productForm.fabricLength === undefined || productForm.fabricLength === null} value={productForm.fabricLength ?? ""} onChange={(e) => dispatch(setClothLength(e.target.value))} />
+            </div>
+            {/* color picker component */}
+            <div>
+              <Label>Add colors for your article</Label>
+              <ColorPicker />
+            </div>
             <div className='mb-5'>
               <Label>Select active color</Label>
               <Select value={productForm.activeColor} onValueChange={(value) => {
@@ -140,15 +149,6 @@ const ProductPage: React.FC = () => {
                   }
                 </SelectContent>
               </Select>
-            </div>
-            <div className='form-group'>
-              <Label>Fabric Length (meters)</Label>
-              <Input disabled={productForm.fabricLength === undefined || productForm.fabricLength === null} value={productForm.fabricLength ?? ""} onChange={(e) => dispatch(setClothLength(e.target.value))} />
-            </div>
-            {/* color picker component */}
-            <div>
-              <Label>Add colors for your article</Label>
-              <ColorPicker />
             </div>
             <div className="form-group">
               <Label>Product Description</Label>
