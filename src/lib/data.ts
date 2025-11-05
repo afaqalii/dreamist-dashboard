@@ -3,7 +3,7 @@ import { AlignVerticalJustifyEnd, Store, ChartColumnIncreasing, NotebookTabs, La
 export const MenuItems = [
     {
         text: "Dashboard",
-        href: "/dashboard",
+        href: "/",
         icon: LayoutDashboard,
     },
     {

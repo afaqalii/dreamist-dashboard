@@ -171,6 +171,7 @@ const ProductPage: React.FC = () => {
                     <SelectValue placeholder="T-shirt" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="jackets">Jackets</SelectItem>
                     <SelectItem value="t-shirt">T-shirt</SelectItem>
                     <SelectItem value="polos">Polos</SelectItem>
                     <SelectItem value="casual-shirts">Casual Shirts</SelectItem>

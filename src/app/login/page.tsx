@@ -26,7 +26,7 @@ const Login = () => {
       if (response.status === 200) {
         // Save token to localStorage or cookies
         localStorage.setItem('token', response.data.token);
-        router.push('/dashboard');
+        router.push('/');
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
